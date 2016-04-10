@@ -1,0 +1,63 @@
+{
+  "name": "patchkit-flat-msg-thread",
+  "version": "1.0.0",
+  "description": "Flat rendering of message threads",
+  "main": "index.jsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patchkit/patchkit-flat-msg-thread.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Paul Frazee <pfrazee@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/patchkit/patchkit-flat-msg-thread/issues"
+  },
+  "homepage": "https://github.com/patchkit/patchkit-flat-msg-thread#readme",
+  "dependencies": {
+    "explain-error": "^1.0.1",
+    "patchkit-links": "^1.0.2",
+    "patchkit-msg-view": "^1.1.1",
+    "patchkit-post-composer": "^1.0.0",
+    "patchkit-util": "^1.0.1",
+    "patchwork-threads": "^2.2.0",
+    "pull-stream": "^3.3.0",
+    "react": "^0.14.8",
+    "ssb-msg-schemas": "^6.2.1",
+    "ssb-msgs": "^5.2.0"
+  },
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "react-addons-css-transition-group": "^0.14.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "envify",
+        {
+          "global": true
+        }
+      ],
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "stage-0",
+            "react"
+          ]
+        }
+      ]
+    ]
+  }
+}
