@@ -1,6 +1,6 @@
 {
   "name": "patchkit-flat-msg-thread",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Flat rendering of message threads",
   "main": "index.jsx",
   "scripts": {
