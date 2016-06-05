@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/patchkit/patchkit-flat-msg-thread#readme",
   "dependencies": {
+    "envify": "^3.4.0",
     "explain-error": "^1.0.1",
     "patchkit-links": "^1.0.2",
     "patchkit-msg-view": "^1.1.1",
