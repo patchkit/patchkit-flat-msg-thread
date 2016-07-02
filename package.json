@@ -27,6 +27,7 @@
     "patchkit-post-composer": "^1.0.0",
     "patchkit-util": "^1.0.1",
     "patchwork-threads": "^2.2.0",
+    "patchwork-translations": "^1.0.0",
     "pull-stream": "^3.3.0",
     "react": "^0.14.8",
     "ssb-msg-schemas": "^6.2.1",

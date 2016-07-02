@@ -9,6 +9,7 @@ import { UserLinks } from 'patchkit-links'
 import Card from 'patchkit-msg-view/card'
 import Composer from 'patchkit-post-composer'
 import u from 'patchkit-util'
+import t from 'patchwork-translations'
 
 class BookmarkBtn extends React.Component {
   static propTypes = {
@@ -18,8 +19,8 @@ class BookmarkBtn extends React.Component {
 
   render() {
     const b = this.props.isBookmarked
-    const title = (b?'Watching Thread':'Watch Thread')
-    const hint = (b?'Updates will go in your Inbox. Click again to stop watching.':'Add this thread to your Inbox.')
+    const title = t(b?'thread.WatchingThread':'thread.WatchThread')
+    const hint = t(b?'thread.WatchingHint':'thread.WatchHint')
     return <a className={'hint--bottom '+(b?' selected':'')} data-hint={hint} onClick={this.props.onClick} title={title}>
         <i className={'fa fa-'+(b?'eye':'genderless')} /> {title}
     </a>
@@ -46,8 +47,9 @@ class UnreadBtn extends React.Component {
 
   render() {
     const m = this.state.marked
-    return <a onClick={this.onClick.bind(this)} className="hint--bottom" data-hint="Close this thread and leave it unread">
-      <i className={"fa fa-envelope"+(m?'':'-o')} /> Mark{m?'ed':''} Unread
+    return <a onClick={this.onClick.bind(this)} className="hint--bottom" data-hint={t('thread.CloseThread')}>
+      <i className={"fa fa-envelope"+(m?'':'-o')} />
+      {t(m?'thread.MarkedUnread':'thread.MarkUnread')}
     </a>
   }
 }
@@ -186,7 +188,7 @@ export default class Thread extends React.Component {
                 thread.hasUnread = true
                 threadlib.markThreadRead(ssb, this.state.thread, err => {
                   if (err)
-                    this.context.events.emit('error', explain(err, 'Failed to mark live-streamed reply as read'))
+                    this.context.events.emit('error', explain(err, t('error.markNewReplyRead')))
                 })
               }
             })
@@ -240,7 +242,7 @@ export default class Thread extends React.Component {
     keys.push(thread.key)
     this.context.ssb.patchwork.markUnread(keys, err => {
       if (err)
-        return this.context.events.emit('error', explain(err, 'Failed to mark unread'))
+        return this.context.events.emit('error', explain(err, t('error.markUnread')))
 
       // re-render
       thread.isRead = false
@@ -258,7 +260,7 @@ export default class Thread extends React.Component {
     let thread = this.state.thread
     this.context.ssb.patchwork.toggleBookmark(thread.key, (err, isBookmarked) => {
       if (err)
-        return this.context.events.emit('error', explain(err, 'Failed to toggle bookmark'))
+        return this.context.events.emit('error', explain(err, t('error.toggleBookmark')))
 
       // re-render
       thread.isBookmarked = isBookmarked
@@ -277,7 +279,7 @@ export default class Thread extends React.Component {
     var voteMsg = schemas.vote(msg.key, newVote)
     let done = (err) => {
       if (err)
-        return this.context.events.emit('error', explain(err, 'Failed to publish vote'))
+        return this.context.events.emit('error', explain(err, t('error.publishVote')))
 
       // re-render
       msg.votes[this.context.user.id] = newVote
@@ -294,7 +296,7 @@ export default class Thread extends React.Component {
 
   onFlag(msg, reason) {
     if (!reason)
-      throw new Error('reason is required')
+      throw new Error('error.flagReasonRequired')
 
     // publish new message
     const voteMsg = (reason === 'unflag') // special case
@@ -302,7 +304,7 @@ export default class Thread extends React.Component {
       : schemas.vote(msg.key, -1, reason)
     let done = (err) => {
       if (err)
-        return this.context.events.emit('error', explain(err, 'Failed to publish flag'))
+        return this.context.events.emit('error', explain(err, t('error.publishFlag')))
 
       // re-render
       msg.votes = msg.votes || {}
@@ -338,7 +340,7 @@ export default class Thread extends React.Component {
   render() {
     if (this.state.loadError) {
       return <div className="msg-thread not-found" ref="container">
-        Message not found.
+        {t('thread.MessageNotFound')}
       </div>
     }
 
@@ -354,16 +356,16 @@ export default class Thread extends React.Component {
 
     return <div className="msg-thread" ref="container">
       { !thread
-        ? <div style={{padding: 20, fontWeight: 300, textAlign:'center'}}>{ this.state.isLoading ? 'Loading...' : 'No thread selected.' }</div>
+        ? <div style={{padding: 20, fontWeight: 300, textAlign:'center'}}>{ this.state.isLoading ? t('Loading') : t('thread.NoThreadSelected') }</div>
         : <div>
             <div className="flex thread-toolbar" onClick={this.onClose.bind(this)}>
               <div className="flex-fill">
                 { (thread && thread.mentionsUser) ? <i className="fa fa-at"/> : '' }{' '}
                 { (thread && thread.plaintext) ? '' : <i className="fa fa-lock"/> }{' '}
                 { recps && recps.length
-                  ? <span>To: <UserLinks ids={recps.map(r => r.link)} /></span>
+                  ? <span>{t('thread.ToRecps')} <UserLinks ids={recps.map(r => r.link)} /></span>
                   : '' }
-                { channel ? <span className="channel">in <a href={`#/channel/${channel}`}>#{channel}</a></span> : ''}
+                { channel ? <span className="channel">{t('thread.inChannel')} <a href={`#/channel/${channel}`}>#{channel}</a></span> : ''}
               </div>
               { !isViewingReply && thread && isPublic // dont do bookmark btn if this is a private thread (it'll already be in your inbox)
                 ? <BookmarkBtn onClick={this.onToggleBookmark.bind(this)} isBookmarked={thread.isBookmarked} />
@@ -375,7 +377,7 @@ export default class Thread extends React.Component {
             <ReactCSSTransitionGroup component="div" className="items" transitionName="fade" transitionAppear={true} transitionAppearTimeout={500} transitionEnterTimeout={500} transitionLeaveTimeout={1}>
               { msgs.map((msg, i) => {
                 if (msg.isOldMsgsPlaceholder)
-                  return <div key={thread.key+'-oldposts'} className="msg-view card-oldposts" onClick={this.onShowHistory.bind(this)}>{this.state.numOldMsgsHidden} older messages</div>
+                  return <div key={thread.key+'-oldposts'} className="msg-view card-oldposts" onClick={this.onShowHistory.bind(this)}>{t('thread.numOlderMessages', this.state.numOldMsgsHidden)}</div>
 
                 return <Card
                   key={msg.key}
