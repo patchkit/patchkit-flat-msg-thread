@@ -48,8 +48,7 @@ class UnreadBtn extends React.Component {
   render() {
     const m = this.state.marked
     return <a onClick={this.onClick.bind(this)} className="hint--bottom" data-hint={t('thread.CloseThread')}>
-      <i className={"fa fa-envelope"+(m?'':'-o')} />
-      {t(m?'thread.MarkedUnread':'thread.MarkUnread')}
+      <i className={"fa fa-envelope"+(m?'':'-o')} /> {t(m?'thread.MarkedUnread':'thread.MarkUnread')}
     </a>
   }
 }
